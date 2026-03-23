@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}ScanBack | QR aloqa platformasi{% endblock %}
+
+{% block content %}
+<main class="layout">
+    <section class="hero-card hero-card-single">
+        <div class="hero-copy hero-copy-wide">
+            <span class="eyebrow">SCANBACK</span>
+            <h1>QR scan qiling va egasiga darhol bog'laning.</h1>
+            <p class="hero-text">
+                ScanBack yo'qolgan buyum, hujjat yoki mashina egasiga tez chiqish uchun yaratilgan.
+                Agar QR kodni skaner qilgan bo'lsangiz, tizim sizni avtomatik ravishda kerakli aloqa sahifasiga olib boradi.
+            </p>
+            <div class="hero-metrics">
+                <article>
+                    <strong>{{ active_contacts }}</strong>
+                    <span>Faol ScanBack kontaktlari</span>
+                </article>
+                <article>
+                    <strong>1 tap</strong>
+                    <span>Telefon qilish uchun bitta tugma yetadi</span>
+                </article>
+                <article>
+                    <strong>Mobile</strong>
+                    <span>Telefon ekranlari uchun moslashtirilgan</span>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-grid content-grid-mobile">
+        <article class="info-card">
+            <span class="eyebrow">Qanday ishlaydi</span>
+            <h3>Scan qilingandan keyin oqim juda sodda</h3>
+            <ul class="feature-list">
+                <li>QR kod telefon kamerasi bilan skaner qilinadi.</li>
+                <li>ScanBack sizni kerakli kontakt sahifasiga olib o'tadi.</li>
+                <li>Ism va buyum ma'lumoti ko'rinadi.</li>
+                <li>Pozvonit tugmasi orqali egasiga darhol chiqasiz.</li>
+            </ul>
+        </article>
+
+        <article class="info-card accent-card">
+            <span class="eyebrow">Ishlatish holatlari</span>
+            <h3>Topib olingan narsalar uchun tez aloqa</h3>
+            <div class="pill-row">
+                <span>Mashina</span>
+                <span>Telefon</span>
+                <span>Passport</span>
+                <span>Hujjat</span>
+                <span>Boshqa buyum</span>
+            </div>
+            <p>
+                Agar buyum topib olingan bo'lsa yoki mashina yo'lni to'sib qo'ygan bo'lsa,
+                QR scan orqali egasiga qisqa vaqt ichida bog'lanish mumkin bo'ladi.
+            </p>
+        </article>
+    </section>
+</main>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}ScanBack{% endblock %}</title>
+    <meta name="description" content="ScanBack orqali QR kod yordamida yo'qolgan buyum yoki mashina egasiga tez bog'lanish mumkin.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'qrhub/styles.css' %}">
+</head>
+<body>
+    <div class="page-noise"></div>
+    {% block content %}{% endblock %}
+    <script>
+        document.querySelectorAll("[data-copy]").forEach((button) => {
+            button.addEventListener("click", async () => {
+                const value = button.getAttribute("data-copy");
+                try {
+                    await navigator.clipboard.writeText(value);
+                    button.textContent = "Nusxa olindi";
+                    window.setTimeout(() => {
+                        button.textContent = button.dataset.label;
+                    }, 1800);
+                } catch (error) {
+                    button.textContent = "Nusxalab bo'lmadi";
+                }
+            });
+        });
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

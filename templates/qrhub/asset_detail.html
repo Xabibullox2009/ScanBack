@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}{{ asset.full_name }} | ScanBack{% endblock %}
+
+{% block content %}
+<main class="detail-layout">
+    <section class="detail-card">
+        <span class="eyebrow">SCANBACK CONTACT PAGE</span>
+        <h1>{{ asset.full_name }}</h1>
+        <p class="hero-text">
+            Siz skaner qilgan QR kod <strong>{{ asset.get_asset_type_display }}</strong> uchun ScanBack tizimiga ulangan.
+            Quyidagi tugma orqali egasiga to'g'ridan-to'g'ri qo'ng'iroq qilishingiz mumkin.
+        </p>
+
+        <div class="detail-grid">
+            <article class="info-tile">
+                <span>Buyum turi</span>
+                <strong>{{ asset.get_asset_type_display }}</strong>
+            </article>
+            <article class="info-tile">
+                <span>Identifikator</span>
+                <strong>{{ asset.asset_label }}</strong>
+            </article>
+            <article class="info-tile">
+                <span>Telefon</span>
+                <strong>{{ asset.phone_number }}</strong>
+            </article>
+            <article class="info-tile">
+                <span>Public kod</span>
+                <strong>{{ asset.public_code }}</strong>
+            </article>
+        </div>
+
+        {% if asset.qr_code %}
+            <div class="qr-image-box">
+                <img src="{{ asset.qr_code.url }}" alt="QR code rasmi">
+            </div>
+        {% endif %}
+
+        {% if asset.note %}
+            <div class="notice-box">
+                <span class="notice-label">Izoh</span>
+                <p>{{ asset.note }}</p>
+            </div>
+        {% endif %}
+
+        <div class="mobile-call-panel">
+            <span class="call-panel-label">Egasiga bog'lanish</span>
+            <a class="primary-button call-button" href="tel:{{ asset.phone_link }}">&#1055;&#1086;&#1079;&#1074;&#1086;&#1085;&#1080;&#1090;&#1100;</a>
+            <button
+                type="button"
+                class="secondary-button"
+                data-copy="{{ asset.get_public_url }}"
+                data-label="Public linkni nusxalash"
+            >
+                Public linkni nusxalash
+            </button>
+        </div>
+    </section>
+
+    <aside class="side-card">
+        <span class="eyebrow">Ishonchli oqim</span>
+        <h2>Topib olgan odam uchun mobil qulay yechim</h2>
+        <ol class="step-list">
+            <li>QR kodni skaner qiling.</li>
+            <li>Ega ma'lumotlari bilan sahifa ochiladi.</li>
+            <li>Pozvonit tugmasini bosing.</li>
+            <li>Telefon egasining raqamiga ulanadi.</li>
+        </ol>
+        <p class="side-note">
+            Sahifa telefon ekranida tez ochilishi va bir qo'l bilan bosishga qulay bo'lishi uchun moslashtirilgan.
+        </p>
+    </aside>
+</main>
+{% endblock %}

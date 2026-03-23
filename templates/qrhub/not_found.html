@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}QR kod topilmadi | ScanBack{% endblock %}
+
+{% block content %}
+<main class="empty-state-layout">
+    <section class="empty-state-card">
+        <span class="eyebrow">SCANBACK</span>
+        <h1>QR kod topilmadi</h1>
+        <p class="hero-text">
+            Bu QR kod faol emas yoki noto'g'ri bo'lishi mumkin. Iltimos, QR rasmni qayta skaner qilib ko'ring.
+        </p>
+        <div class="hero-actions">
+            <a class="primary-button" href="{% url 'qrhub:home' %}">Bosh sahifaga qaytish</a>
+        </div>
+    </section>
+</main>
+{% endblock %}
