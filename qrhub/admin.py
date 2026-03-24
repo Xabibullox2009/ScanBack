@@ -23,7 +23,7 @@ class AssetContactAdmin(admin.ModelAdmin):
     search_fields = ("public_code", "first_name", "last_name", "asset_label", "phone_number")
     list_editable = ("is_active",)
     ordering = ("-updated_at",)
-    readonly_fields = ("public_url", "uploaded_qr_preview", "created_at", "updated_at")
+    readonly_fields = ("public_url", "call_url", "uploaded_qr_preview", "created_at", "updated_at")
     fieldsets = (
         (
             "Ega ma'lumotlari",
@@ -35,7 +35,7 @@ class AssetContactAdmin(admin.ModelAdmin):
         ),
         (
             "Public sahifa",
-            {"fields": ("public_url", "uploaded_qr_preview")},
+            {"fields": ("public_url", "call_url", "uploaded_qr_preview")},
         ),
         (
             "Tizim ma'lumotlari",
@@ -53,6 +53,18 @@ class AssetContactAdmin(admin.ModelAdmin):
             return "Avval obyektni saqlang, keyin public link chiqadi."
 
         url = obj.get_public_url()
+        return format_html(
+            '<a href="{}" target="_blank" rel="noopener">{}</a>',
+            url,
+            url,
+        )
+
+    @admin.display(description="Qo'ng'iroq linki")
+    def call_url(self, obj):
+        if not obj.pk:
+            return "Avval obyektni saqlang, keyin qo'ng'iroq linki chiqadi."
+
+        url = f"{obj.get_public_url().rstrip('/')}/call/"
         return format_html(
             '<a href="{}" target="_blank" rel="noopener">{}</a>',
             url,

@@ -46,7 +46,7 @@
 
         <div class="mobile-call-panel">
             <span class="call-panel-label">Egasiga bog'lanish</span>
-            <a class="primary-button call-button" href="tel:{{ asset.phone_link }}">&#1055;&#1086;&#1079;&#1074;&#1086;&#1085;&#1080;&#1090;&#1100;</a>
+            <a class="primary-button call-button" href="{% url 'qrhub:asset-call' asset.public_code %}">Qo'ng'iroq qilish</a>
             <button
                 type="button"
                 class="secondary-button"

@@ -1,5 +1,6 @@
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.shortcuts import render
+from django.views import View
 from django.views.generic import DetailView, TemplateView
 
 from .models import AssetContact
@@ -31,3 +32,13 @@ class AssetContactDetailView(DetailView):
 
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
+
+
+class AssetContactCallRedirectView(View):
+    def get(self, request, public_code, *args, **kwargs):
+        try:
+            asset = AssetContact.objects.get(public_code=public_code, is_active=True)
+        except AssetContact.DoesNotExist:
+            return render(request, "qrhub/not_found.html", status=404)
+
+        return HttpResponse(status=302, headers={"Location": f"tel:{asset.phone_link}"})

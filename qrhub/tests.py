@@ -122,7 +122,22 @@ class PublicFlowTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.asset.full_name)
-        self.assertContains(response, "tel:+998901234567")
+        self.assertContains(
+            response,
+            reverse("qrhub:asset-call", args=[self.asset.public_code]),
+        )
+
+    def test_call_endpoint_redirects_to_phone_dialer(self):
+        response = self.client.get(reverse("qrhub:asset-call", args=[self.asset.public_code]))
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response["Location"], "tel:+998901234567")
+
+    def test_short_public_code_route_loads_asset_page(self):
+        response = self.client.get(f"/{self.asset.public_code}/")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.asset.full_name)
 
     def test_inactive_asset_returns_not_found_page(self):
         response = self.client.get(reverse("qrhub:asset-detail", args=[self.inactive_asset.public_code]))
