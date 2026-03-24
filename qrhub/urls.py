@@ -1,13 +1,11 @@
 from django.urls import path
 
-from .views import AssetContactCallRedirectView, AssetContactDetailView, HomeView
+from . import views
 
 app_name = "qrhub"
 
 urlpatterns = [
-    path("", HomeView.as_view(), name="home"),
-    path("scan/<slug:public_code>/", AssetContactDetailView.as_view(), name="asset-detail"),
-    path("scan/<slug:public_code>/call/", AssetContactCallRedirectView.as_view(), name="asset-call"),
-    path("<slug:public_code>/", AssetContactDetailView.as_view(), name="asset-detail-short"),
-    path("<slug:public_code>/call/", AssetContactCallRedirectView.as_view(), name="asset-call-short"),
+    path("", views.home, name="home"),
+    path("u/<slug:slug>/", views.detail, name="detail"),
+    path("result/<slug:slug>/", views.result, name="result"),
 ]

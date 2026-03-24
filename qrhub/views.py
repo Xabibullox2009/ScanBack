@@ -1,44 +1,61 @@
-from django.http import Http404, HttpResponse
-from django.shortcuts import render
-from django.views import View
-from django.views.generic import DetailView, TemplateView
+import os
+import uuid
 
-from .models import AssetContact
+import qrcode
+from django.conf import settings
+from django.http import HttpResponse
+from django.shortcuts import redirect, render
+from django.views.decorators.http import require_http_methods
 
-
-class HomeView(TemplateView):
-    template_name = "qrhub/home.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["active_contacts"] = AssetContact.objects.filter(is_active=True).count()
-        return context
+from .models import QRCode
 
 
-class AssetContactDetailView(DetailView):
-    template_name = "qrhub/asset_detail.html"
-    context_object_name = "asset"
-    slug_field = "public_code"
-    slug_url_kwarg = "public_code"
+@require_http_methods(["GET", "POST"])
+def home(request):
+    if request.method == "POST":
+        name = request.POST.get("name", "").strip()
+        phone = request.POST.get("phone", "").strip()
 
-    def get_queryset(self):
-        return AssetContact.objects.filter(is_active=True)
+        if not name or not phone:
+            return render(request, "qrhub/home.html", {"error": "Barcha maydonlarni to'ldiring!"})
 
-    def get(self, request, *args, **kwargs):
-        try:
-            self.object = self.get_object()
-        except Http404:
-            return render(request, "qrhub/not_found.html", status=404)
+        qr = QRCode(name=name, phone=phone)
+        qr.save()
 
-        context = self.get_context_data(object=self.object)
-        return self.render_to_response(context)
+        base_url = getattr(settings, "SCANBACK_BASE_URL", request.build_absolute_uri("/")[:-1])
+        url = f"{base_url}/u/{qr.slug}/"
+
+        qr_path = os.path.join(settings.MEDIA_ROOT, "qr_codes")
+        os.makedirs(qr_path, exist_ok=True)
+
+        qr_image_path = os.path.join(qr_path, f"{qr.slug}.png")
+
+        img = qrcode.make(url)
+        img.save(qr_image_path)
+
+        qr.qr_image = f"qr_codes/{qr.slug}.png"
+        qr.save()
+
+        return redirect("qrhub:result", slug=qr.slug)
+
+    return render(request, "qrhub/home.html")
 
 
-class AssetContactCallRedirectView(View):
-    def get(self, request, public_code, *args, **kwargs):
-        try:
-            asset = AssetContact.objects.get(public_code=public_code, is_active=True)
-        except AssetContact.DoesNotExist:
-            return render(request, "qrhub/not_found.html", status=404)
+def result(request, slug):
+    try:
+        qr = QRCode.objects.get(slug=slug)
+    except QRCode.DoesNotExist:
+        return render(request, "qrhub/not_found.html", status=404)
 
-        return HttpResponse(status=302, headers={"Location": f"tel:{asset.phone_link}"})
+    return render(request, "qrhub/result.html", {"qr": qr})
+
+
+def detail(request, slug):
+    try:
+        qr = QRCode.objects.get(slug=slug)
+    except QRCode.DoesNotExist:
+        return render(request, "qrhub/not_found.html", status=404)
+
+    phone_link = qr.phone.replace(" ", "").replace("-", "")
+
+    return render(request, "qrhub/detail.html", {"qr": qr, "phone_link": phone_link})

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}{{ qr.name }} - ScanBack{% endblock %}
+
+{% block content %}
+<main class="container">
+    <div class="detail-card">
+        <span class="eyebrow">Topilgan buyum</span>
+        <h1>{% if qr.name %}{{ qr.name }}{% else %}No'malum{% endif %}</h1>
+        <p class="message">
+            Agar bu buyumni topgan bo'lsangiz, iltimos, egasiga bog'laning!
+        </p>
+
+        <a href="tel:{{ phone_link }}" class="call-button">
+            <span class="call-icon">📞</span>
+            Qo'ng'iroq qilish
+        </a>
+
+        <div class="info-section">
+            <p class="phone-display">
+                <strong>Telefon:</strong> {{ qr.phone }}
+            </p>
+            <p class="date-info">
+                <small>ScanBack orqali {{ qr.created_at|date:"d.m.Y H:i" }} da yaratilgan</small>
+            </p>
+        </div>
+
+        <div class="help-text">
+            <p>Telefon raqamni bosib nusxalash uchun:</p>
+            <button type="button" class="btn-secondary" data-copy="{{ qr.phone }}">
+                Telefon raqamini nusxalash
+            </button>
+        </div>
+    </div>
+</main>
+{% endblock %}

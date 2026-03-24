@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}QR Kod tayyor! - ScanBack{% endblock %}
+
+{% block content %}
+<main class="container">
+    <div class="result-card">
+        <span class="eyebrow">Muvaffaqiyat!</span>
+        <h1>QR Kodingiz tayyor!</h1>
+        <p class="hero-text">
+            Quyidagi QR kodni yuklab oling va uni yo'qolishi mumkin bo'lgan buyumga joylashtiring.
+        </p>
+
+        <div class="qr-preview">
+            <img src="{{ qr.qr_image.url }}" alt="QR Kod">
+        </div>
+
+        <div class="link-section">
+            <p>Linkingiz:</p>
+            <div class="link-box">
+                <input type="text" value="{{ request.build_absolute_uri|slice:':-7' }}/u/{{ qr.slug }}/" readonly>
+                <button type="button" class="btn-copy" data-copy="{{ request.build_absolute_uri|slice:':-7' }}/u/{{ qr.slug }}/">
+                    Nusxalash
+                </button>
+            </div>
+        </div>
+
+        <div class="actions">
+            <a href="{{ qr.qr_image.url }}" download="{{ qr.name }}_qr.png" class="btn-primary">
+                QR Kodni yuklab olish
+            </a>
+            <a href="{{ qr.qr_image.url }}" target="_blank" class="btn-secondary">
+                Kattalashtirish
+            </a>
+        </div>
+
+        <div class="info-box">
+            <h3>Keyingi qadamlar:</h3>
+            <ol>
+                <li>QR kodni A4 yoki kichikroq qog'ozga chop qiling</li>
+                <li>Kodni buyumning ko'rinadigan joyiga yapıştırın (mashina oynasiga, telefon orqasiga)</li>
+                <li>QR ni skanerlash orqali sizga bog'lanish mumkin bo'ladi</li>
+            </ol>
+        </div>
+
+        <a href="{% url 'qrhub:home' %}" class="btn-link">Yana QR kod yaratish</a>
+    </div>
+</main>
+{% endblock %}
