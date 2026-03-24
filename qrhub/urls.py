@@ -6,4 +6,5 @@ app_name = "qrhub"
 
 urlpatterns = [
     path("u/<slug:slug>/", views.public_page, name="public"),
+    path("", views.index, name="home"),
 ]
