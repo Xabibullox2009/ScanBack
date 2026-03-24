@@ -5,14 +5,15 @@
 {% block content %}
 <main class="public-shell">
     <section class="public-card">
-        <p class="eyebrow">ScanBack</p>
+        <p class="eyebrow">ScanBack Contact Page</p>
         <h1>{{ qr_code.name }}</h1>
         <p class="lead">If you found this item, please call the owner.</p>
         <a class="call-button" href="{{ qr_code.get_phone_link }}">
-            <span class="call-emoji">📞</span>
+            <span class="call-emoji">&#128222;</span>
             Call Owner
         </a>
         <p class="phone-label">{{ qr_code.phone }}</p>
+        <p class="public-note">On mobile devices, tapping the button opens the phone app automatically.</p>
     </section>
 </main>
 {% endblock %}

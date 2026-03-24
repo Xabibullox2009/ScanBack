@@ -1,54 +1,115 @@
 {% extends "base.html" %}
 
-{% block title %}ScanBack - QR Kod Yaratish{% endblock %}
+{% block title %}ScanBack | Smart Lost and Found{% endblock %}
 
 {% block content %}
-<main class="container">
-    <div class="hero-card">
-        <div class="hero-copy">
-            <span class="eyebrow">ScanBack</span>
-            <h1>Yo'qolgan buyumni topdingizmi?</h1>
-            <p class="hero-text">
-                QR kod yarating va uni yo'qolishi mumkin bo'lgan buyumga joylashtiring.
-                Topib olgan odam QR ni skanerlab sizga osongina bog'lanishi mumkin.
-            </p>
-        </div>
+<main class="landing-shell">
+    <section class="hero">
+        <header class="topbar">
+            <a class="brand" href="{% url 'qrhub:home' %}">
+                <span class="brand-mark">SB</span>
+                <span class="brand-text">
+                    <strong>ScanBack</strong>
+                    <small>QR Lost and Found</small>
+                </span>
+            </a>
+            <a class="admin-link" href="/admin/">Admin Panel</a>
+        </header>
 
-        <div class="form-card">
-            <h2>QR Kod yaratish</h2>
-            <form method="POST">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="id_name">Ismingiz</label>
-                    <input type="text" id="id_name" name="name" placeholder="John Doe" required>
+        <div class="hero-grid">
+            <div class="hero-copy">
+                <p class="eyebrow">Lost items, found faster</p>
+                <h1>Your item gets a QR code. The finder gets one-tap calling.</h1>
+                <p class="hero-text">
+                    ScanBack helps businesses and clients protect bags, keys, documents, devices,
+                    and personal belongings with admin-generated QR codes. When someone scans the code,
+                    they instantly see the owner's name and a call button that opens the phone dialer.
+                </p>
+                <div class="hero-actions">
+                    <a class="primary-action" href="/admin/">Create QR Codes</a>
+                    <a class="secondary-action" href="#how-it-works">How It Works</a>
                 </div>
-                <div class="form-group">
-                    <label for="id_phone">Telefon raqamingiz</label>
-                    <input type="tel" id="id_phone" name="phone" placeholder="+998 90 123 45 67" required>
-                </div>
-                {% if error %}
-                <div class="error-message">{{ error }}</div>
-                {% endif %}
-                <button type="submit" class="btn-primary">QR Kod yaratish</button>
-            </form>
-        </div>
-    </div>
+                <ul class="trust-list">
+                    <li>Admin creates QR codes for clients</li>
+                    <li>Each QR opens a unique secure slug page</li>
+                    <li>Mobile users can call the owner in one tap</li>
+                </ul>
+            </div>
 
-    <section class="features">
-        <div class="feature-card">
-            <div class="feature-icon">1</div>
-            <h3>Ro'yxatdan o'ting</h3>
-            <p>Ismingiz va telefon raqamingizni kiriting</p>
+            <div class="hero-panel">
+                <div class="phone-mockup">
+                    <div class="phone-top"></div>
+                    <div class="phone-screen">
+                        <p class="screen-label">Scanned QR page</p>
+                        <h2>Akmal Karimov</h2>
+                        <p>If you found this item, please call the owner.</p>
+                        <a class="call-button demo-button" href="tel:+998901234567">
+                            <span class="call-emoji">&#128222;</span>
+                            Call Owner
+                        </a>
+                        <span class="phone-label">+998901234567</span>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="feature-card">
-            <div class="feature-icon">2</div>
-            <h3>QR kodni yuklab oling</h3>
-            <p>Bepul QR kod yaratilsin</p>
+    </section>
+
+    <section class="info-strip">
+        <div class="info-card">
+            <strong>For businesses</strong>
+            <p>Manage QR codes centrally from the Django admin panel.</p>
         </div>
-        <div class="feature-card">
-            <div class="feature-icon">3</div>
-            <h3>Buyumga joylashtiring</h3>
-            <p>QR kodni ko'rinadigan joyga yapıştırın</p>
+        <div class="info-card">
+            <strong>For clients</strong>
+            <p>No login needed. Their contact page opens directly from the QR code.</p>
+        </div>
+        <div class="info-card">
+            <strong>For finders</strong>
+            <p>Scan, view the owner, tap the button, and call from the mobile dialer.</p>
+        </div>
+    </section>
+
+    <section class="section-block" id="how-it-works">
+        <div class="section-heading">
+            <p class="eyebrow">How it works</p>
+            <h2>Simple flow from admin dashboard to mobile call</h2>
+        </div>
+        <div class="steps-grid">
+            <article class="step-card">
+                <span class="step-number">01</span>
+                <h3>Admin creates a record</h3>
+                <p>Enter the client name and phone number in the admin panel.</p>
+            </article>
+            <article class="step-card">
+                <span class="step-number">02</span>
+                <h3>System generates the QR</h3>
+                <p>ScanBack creates a unique slug and saves the QR image automatically.</p>
+            </article>
+            <article class="step-card">
+                <span class="step-number">03</span>
+                <h3>Finder scans the code</h3>
+                <p>The QR opens a clean page showing the owner's name and call action.</p>
+            </article>
+            <article class="step-card">
+                <span class="step-number">04</span>
+                <h3>Phone app opens</h3>
+                <p>The call button uses `tel:` so mobile devices open the dialer directly.</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="section-block compact-section">
+        <div class="section-heading">
+            <p class="eyebrow">Best use cases</p>
+            <h2>Made for real items people lose every day</h2>
+        </div>
+        <div class="use-case-grid">
+            <div class="use-case-card">Backpacks and luggage</div>
+            <div class="use-case-card">Keys and wallets</div>
+            <div class="use-case-card">Company devices</div>
+            <div class="use-case-card">ID holders and cards</div>
+            <div class="use-case-card">School and office items</div>
+            <div class="use-case-card">Delivery and travel gear</div>
         </div>
     </section>
 </main>
