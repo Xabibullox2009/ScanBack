@@ -31,12 +31,6 @@
             </article>
         </div>
 
-        {% if asset.qr_code %}
-            <div class="qr-image-box">
-                <img src="{{ asset.qr_code.url }}" alt="QR code rasmi">
-            </div>
-        {% endif %}
-
         {% if asset.note %}
             <div class="notice-box">
                 <span class="notice-label">Izoh</span>
