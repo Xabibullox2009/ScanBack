@@ -13,16 +13,17 @@ def env_bool(name, default=False):
 
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "scanback-dev-secret-key-change-me")
-DEBUG = env_bool("DEBUG", default=True)
+DEBUG = False
 
 allowed_hosts = os.environ.get("ALLOWED_HOSTS", "")
 ALLOWED_HOSTS = [host.strip() for host in allowed_hosts.split(",") if host.strip()]
 if not ALLOWED_HOSTS:
-    ALLOWED_HOSTS = [
-        "127.0.0.1",
-        "localhost",
-        "scanback.onrender.com",
-    ]
+   ALLOWED_HOSTS = [
+        'scanback.onrender.com',
+        '.onrender.com',
+        'localhost',
+        '127.0.0.1'
+]
 
 APP_BASE_URL = os.environ.get("APP_BASE_URL", "https://your-domain.com").rstrip("/")
 
@@ -35,6 +36,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "qrhub",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://scanback.onrender.com"
 ]
 
 MIDDLEWARE = [
