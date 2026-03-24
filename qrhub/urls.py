@@ -5,6 +5,6 @@ from . import views
 app_name = "qrhub"
 
 urlpatterns = [
+    path("", views.home, name="home"),
     path("u/<slug:slug>/", views.public_page, name="public"),
-    path("", views.index, name="home"),
 ]
