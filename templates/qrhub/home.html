@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}ScanBack | Smart Lost and Found{% endblock %}
 
@@ -7,13 +8,12 @@
     <section class="hero">
         <header class="topbar">
             <a class="brand" href="{% url 'qrhub:home' %}">
-                <span class="brand-mark">SB</span>
+                <img class="brand-logo" src="{% static 'qrhub/logo.png' %}" alt="ScanBack logo">
                 <span class="brand-text">
                     <strong>ScanBack</strong>
                     <small>QR Lost and Found</small>
                 </span>
             </a>
-            <a class="admin-link" href="/admin/">Admin Panel</a>
         </header>
 
         <div class="hero-grid">
@@ -25,10 +25,6 @@
                     and personal belongings with admin-generated QR codes. When someone scans the code,
                     they instantly see the owner's name and a call button that opens the phone dialer.
                 </p>
-                <div class="hero-actions">
-                    <a class="primary-action" href="/admin/">Create QR Codes</a>
-                    <a class="secondary-action" href="#how-it-works">How It Works</a>
-                </div>
                 <ul class="trust-list">
                     <li>Admin creates QR codes for clients</li>
                     <li>Each QR opens a unique secure slug page</li>
@@ -57,7 +53,7 @@
     <section class="info-strip">
         <div class="info-card">
             <strong>For businesses</strong>
-            <p>Manage QR codes centrally from the Django admin panel.</p>
+            <p>Protect client belongings with a simple QR-based callback system.</p>
         </div>
         <div class="info-card">
             <strong>For clients</strong>
@@ -77,8 +73,8 @@
         <div class="steps-grid">
             <article class="step-card">
                 <span class="step-number">01</span>
-                <h3>Admin creates a record</h3>
-                <p>Enter the client name and phone number in the admin panel.</p>
+                <h3>Client gets a QR identity</h3>
+                <p>Each protected item is connected to its owner's saved contact details.</p>
             </article>
             <article class="step-card">
                 <span class="step-number">02</span>
