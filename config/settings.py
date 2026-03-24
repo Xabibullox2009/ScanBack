@@ -1,17 +1,27 @@
 import os
 from pathlib import Path
 
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get(
-    "DJANGO_SECRET_KEY",
-    "scanback-dev-secret-key-change-before-production",
-)
 
-DEBUG = os.environ.get("DJANGO_DEBUG", "True").lower() in {"1", "true", "yes", "on"}
+def env_bool(name, default=False):
+    value = os.environ.get(name)
+    if value is None:
+        return default
+    return value.lower() in {"1", "true", "yes", "on"}
 
-ALLOWED_HOSTS = ["*",
-                 "scanback.onrender.com",]
+
+SECRET_KEY = os.environ.get("SECRET_KEY", "scanback-dev-secret-key-change-me")
+
+DEBUG = False
+
+allowed_hosts = os.environ.get("ALLOWED_HOSTS", "")
+ALLOWED_HOSTS = [host.strip() for host in allowed_hosts.split(",") if host.strip()]
+if DEBUG and not ALLOWED_HOSTS:
+    ALLOWED_HOSTS = ['scanback.onrender.com', '127.0.0.1', 'localhost']
+
+APP_BASE_URL = os.environ.get("APP_BASE_URL", "https://your-domain.com").rstrip("/")
 
 
 INSTALLED_APPS = [
@@ -21,12 +31,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "qrhub.apps.QrhubConfig",
+    "qrhub",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",  # 🔥 MUHIM
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -44,12 +54,13 @@ TEMPLATES = [
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
+                "django.template.context_processors.debug",
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
             ],
         },
-    }
+    },
 ]
 
 WSGI_APPLICATION = "config.wsgi.application"
@@ -61,22 +72,41 @@ DATABASES = {
     }
 }
 
-LANGUAGE_CODE = "uz"
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+    },
+]
+
+LANGUAGE_CODE = "en-us"
 TIME_ZONE = "Asia/Tashkent"
 
 USE_I18N = True
 USE_TZ = True
 
-# ✅ STATIC
 STATIC_URL = "/static/"
-STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_DIRS = [BASE_DIR / "static"]
 
-# 🔥 WhiteNoise storage
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
-# ✅ MEDIA
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

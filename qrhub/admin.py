@@ -6,20 +6,34 @@ from .models import QRCode
 
 @admin.register(QRCode)
 class QRCodeAdmin(admin.ModelAdmin):
-    list_display = ("name", "phone", "slug", "qr_preview", "created_at")
+    list_display = ("name", "phone", "slug", "qr_preview", "download_qr", "created_at")
     list_filter = ("created_at",)
     search_fields = ("name", "phone", "slug")
-    readonly_fields = ("slug", "qr_preview", "created_at")
-    fieldsets = (
-        ("Ma'lumotlar", {"fields": ("name", "phone")}),
-        ("Tizim", {"fields": ("slug", "qr_image", "qr_preview", "created_at")}),
-    )
+    readonly_fields = ("slug", "created_at", "qr_preview", "download_qr", "public_url")
+    fields = ("name", "phone", "slug", "public_url", "qr_image", "qr_preview", "download_qr", "created_at")
 
-    @admin.display(description="QR Kod", ordering="qr_image")
+    @admin.display(description="Public URL")
+    def public_url(self, obj):
+        if not obj.pk:
+            return "Saved after creation"
+        url = obj.get_public_url()
+        return format_html('<a href="{}" target="_blank" rel="noopener noreferrer">{}</a>', url, url)
+
+    @admin.display(description="QR Preview")
     def qr_preview(self, obj):
-        if obj.qr_image:
-            return format_html(
-                '<img src="{}" width="120" height="120" style="border-radius:12px; object-fit:cover;" />',
-                obj.qr_image.url,
-            )
-        return "Hali yaratilmagan"
+        if not obj.qr_image:
+            return "QR image will appear after saving."
+        return format_html(
+            '<img src="{}" alt="QR code for {}" style="width: 150px; height: 150px; border-radius: 12px; border: 1px solid #dbe2ea;" />',
+            obj.qr_image.url,
+            obj.name,
+        )
+
+    @admin.display(description="Download")
+    def download_qr(self, obj):
+        if not obj.qr_image:
+            return "-"
+        return format_html(
+            '<a class="button" href="{}" download>Download QR</a>',
+            obj.qr_image.url,
+        )

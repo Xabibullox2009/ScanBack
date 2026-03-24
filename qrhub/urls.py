@@ -1,9 +1,11 @@
 from django.urls import path
 
-from . import views
+from .views import home, public_qr
+
 
 app_name = "qrhub"
 
 urlpatterns = [
-    path("u/<slug:slug>/", views.public_page, name="public"),
+    path("", home, name="home"),
+    path("u/<slug:slug>/", public_qr, name="public_qr"),
 ]

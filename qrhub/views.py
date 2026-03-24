@@ -1,9 +1,12 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 
 from .models import QRCode
 
 
-def public_page(request, slug):
-    qr = get_object_or_404(QRCode, slug=slug)
-    phone_link = qr.get_tel_link()
-    return render(request, "qrhub/public.html", {"qr": qr, "phone_link": phone_link})
+def home(request):
+    return redirect("admin:index")
+
+
+def public_qr(request, slug):
+    qr_code = get_object_or_404(QRCode, slug=slug)
+    return render(request, "qrhub/public.html", {"qr_code": qr_code})

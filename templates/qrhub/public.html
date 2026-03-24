@@ -1,22 +1,18 @@
 {% extends "base.html" %}
 
-{% block title %}{{ qr.name }} - ScanBack{% endblock %}
+{% block title %}{{ qr_code.name }} | ScanBack{% endblock %}
 
 {% block content %}
-<main class="container">
-    <div class="card">
-        <span class="badge">ScanBack</span>
-        
-        <h1>{{ qr.name }}</h1>
-        
-        <p class="message">
-            Agar bu buyumni topgan bo'lsangiz, iltimos, egasiga bog'laning!
-        </p>
-
-        <a href="tel:{{ phone_link }}" class="call-button">
-            <span class="icon">📞</span>
-            Qo'ng'iroq qilish
+<main class="public-shell">
+    <section class="public-card">
+        <p class="eyebrow">ScanBack</p>
+        <h1>{{ qr_code.name }}</h1>
+        <p class="lead">If you found this item, please call the owner.</p>
+        <a class="call-button" href="{{ qr_code.get_phone_link }}">
+            <span class="call-emoji">📞</span>
+            Call Owner
         </a>
-    </div>
+        <p class="phone-label">{{ qr_code.phone }}</p>
+    </section>
 </main>
 {% endblock %}

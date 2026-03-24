@@ -1,57 +1,80 @@
-import os
-import uuid
+import secrets
+import string
+from io import BytesIO
 
 import qrcode
 from django.conf import settings
+from django.core.files.base import ContentFile
+from django.core.validators import RegexValidator
 from django.db import models
+from django.urls import reverse
 
 
-def generate_qr_code(qr_instance):
-    if not qr_instance.slug:
-        qr_instance.slug = str(uuid.uuid4())[:8]
+phone_validator = RegexValidator(
+    regex=r"^\+\d{7,15}$",
+    message="Phone number must be in international format, for example +998901234567.",
+)
 
-    base_url = getattr(settings, "SCANBACK_BASE_URL", "https://scanback.onrender.com")
-    url = f"{base_url}/u/{qr_instance.slug}/"
 
-    qr_path = os.path.join(settings.MEDIA_ROOT, "qr_codes")
-    os.makedirs(qr_path, exist_ok=True)
-
-    img = qrcode.make(url)
-    img_path = os.path.join(qr_path, f"{qr_instance.slug}.png")
-    img.save(img_path)
-
-    qr_instance.qr_image = f"qr_codes/{qr_instance.slug}.png"
+def generate_unique_slug(length=8):
+    alphabet = string.ascii_lowercase + string.digits
+    while True:
+        slug = "".join(secrets.choice(alphabet) for _ in range(length))
+        if not QRCode.objects.filter(slug=slug).exists():
+            return slug
 
 
 class QRCode(models.Model):
-    name = models.CharField("Ism", max_length=100)
-    phone = models.CharField("Telefon raqami", max_length=20)
-    slug = models.SlugField("Slug", unique=True, blank=True)
-    qr_image = models.ImageField("QR Rasmi", upload_to="qr_codes/", blank=True, null=True)
-    created_at = models.DateTimeField("Yaratilgan vaqt", auto_now_add=True)
+    name = models.CharField(max_length=255)
+    phone = models.CharField(max_length=16, validators=[phone_validator])
+    slug = models.SlugField(unique=True, blank=True)
+    qr_image = models.ImageField(upload_to="qr_codes/", blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name = "QR Kod"
-        verbose_name_plural = "QR Kodlar"
         ordering = ["-created_at"]
 
     def __str__(self):
-        return f"{self.name} - {self.phone}"
+        return f"{self.name} ({self.phone})"
 
     def save(self, *args, **kwargs):
+        self.phone = self.phone.strip()
         if not self.slug:
-            self.slug = str(uuid.uuid4())[:8]
+            self.slug = generate_unique_slug()
 
-        is_new = not self.pk
+        qr_needs_refresh = not self.qr_image or self._slug_changed()
         super().save(*args, **kwargs)
 
-        if is_new and not self.qr_image:
-            generate_qr_code(self)
-            super().save(update_fields=["qr_image"])
+        if qr_needs_refresh:
+            self.generate_qr_image(save=True)
+
+    def _slug_changed(self):
+        if not self.pk:
+            return False
+        original = type(self).objects.filter(pk=self.pk).values_list("slug", flat=True).first()
+        return bool(original and original != self.slug)
 
     def get_public_url(self):
-        base_url = getattr(settings, "SCANBACK_BASE_URL", "https://scanback.example.com")
-        return f"{base_url}/u/{self.slug}/"
+        return f"{settings.APP_BASE_URL}{reverse('qrhub:public_qr', kwargs={'slug': self.slug})}"
 
-    def get_tel_link(self):
-        return self.phone.replace(" ", "").replace("-", "")
+    def get_phone_link(self):
+        return f"tel:{self.phone}"
+
+    def generate_qr_image(self, save=True):
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_M,
+            box_size=10,
+            border=4,
+        )
+        qr.add_data(self.get_public_url())
+        qr.make(fit=True)
+
+        image = qr.make_image(fill_color="black", back_color="white")
+        buffer = BytesIO()
+        image.save(buffer, format="PNG")
+        filename = f"{self.slug}.png"
+
+        self.qr_image.save(filename, ContentFile(buffer.getvalue()), save=False)
+        if save:
+            super().save(update_fields=["qr_image"])
