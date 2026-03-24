@@ -13,13 +13,16 @@ def env_bool(name, default=False):
 
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "scanback-dev-secret-key-change-me")
-
-DEBUG = False
+DEBUG = env_bool("DEBUG", default=True)
 
 allowed_hosts = os.environ.get("ALLOWED_HOSTS", "")
 ALLOWED_HOSTS = [host.strip() for host in allowed_hosts.split(",") if host.strip()]
-if DEBUG and not ALLOWED_HOSTS:
-    ALLOWED_HOSTS = ['scanback.onrender.com', '127.0.0.1', 'localhost']
+if not ALLOWED_HOSTS:
+    ALLOWED_HOSTS = [
+        "127.0.0.1",
+        "localhost",
+        "scanback.onrender.com",
+    ]
 
 APP_BASE_URL = os.environ.get("APP_BASE_URL", "https://your-domain.com").rstrip("/")
 
