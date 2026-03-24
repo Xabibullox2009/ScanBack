@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}{{ qr.name }} - ScanBack{% endblock %}
+
+{% block content %}
+<main class="container">
+    <div class="card">
+        <span class="badge">ScanBack</span>
+        
+        <h1>{{ qr.name }}</h1>
+        
+        <p class="message">
+            Agar bu buyumni topgan bo'lsangiz, iltimos, egasiga bog'laning!
+        </p>
+
+        <a href="tel:{{ phone_link }}" class="call-button">
+            <span class="icon">📞</span>
+            Qo'ng'iroq qilish
+        </a>
+
+        <div class="info">
+            <p><strong>Telefon:</strong> {{ qr.phone }}</p>
+        </div>
+
+        <p class="footer">
+            ScanBack orqali {{ qr.created_at|date:"d.m.Y" }} da ro'yxatga olingan
+        </p>
+    </div>
+</main>
+{% endblock %}
