@@ -316,8 +316,26 @@ a {
     line-height: 1.7;
 }
 
+.demo-note {
+    margin: 12px 0 0;
+    font-weight: 700;
+}
+
 .demo-button {
     margin-top: 8px;
+}
+
+.demo-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 14px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(16, 42, 67, 0.08);
+    color: var(--ink);
+    font-size: 0.85rem;
+    font-weight: 800;
 }
 
 .info-strip,
