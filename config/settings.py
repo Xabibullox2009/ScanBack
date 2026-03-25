@@ -14,7 +14,7 @@ def env_bool(name, default=False):
 
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "scanback-dev-secret-key-change-me")
-DEBUG = env_bool("DEBUG", default=True)
+DEBUG = env_bool("DEBUG", default=False)
 
 allowed_hosts = os.environ.get("ALLOWED_HOSTS", "")
 ALLOWED_HOSTS = [host.strip() for host in allowed_hosts.split(",") if host.strip()]
@@ -49,7 +49,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "qrhub.middleware.LanguageMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -132,5 +132,6 @@ STORAGES = {
 }
 
 WHITENOISE_MANIFEST_STRICT = False
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

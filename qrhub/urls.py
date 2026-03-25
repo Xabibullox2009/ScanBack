@@ -11,3 +11,4 @@ urlpatterns = [
     path("u/<slug:slug>/", public_qr, name="public_qr"),
     path("<slug:slug>/", public_qr, name="public_qr_short"),
 ]
+ 

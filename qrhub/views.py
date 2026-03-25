@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import translation
 
 from .models import QRCode
 
@@ -22,5 +23,6 @@ def switch_language(request):
     request.session["language_code"] = language_code
     next_url = request.GET.get("next") or request.META.get("HTTP_REFERER") or "/"
     response = redirect(next_url)
+    translation.activate(language_code)
     response.set_cookie(settings.LANGUAGE_COOKIE_NAME, language_code)
     return response
