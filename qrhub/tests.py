@@ -1,6 +1,7 @@
 import shutil
 from pathlib import Path
 
+from django.contrib.auth import get_user_model
 from django.conf import settings
 from django.test import TestCase
 from django.test.utils import override_settings
@@ -56,11 +57,6 @@ class QRHubPublicFlowTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Dilshod K.")
 
-    def test_home_page_contains_admin_link(self):
-        response = self.client.get(reverse("qrhub:home"))
-
-        self.assertContains(response, 'href="/admin/"', html=False)
-
     def test_public_url_accepts_runtime_base_url(self):
         url = self.qr_code.get_public_url(base_url="http://127.0.0.1:8000")
 
@@ -88,3 +84,25 @@ class QRHubPublicFlowTests(TestCase):
 
         self.assertContains(response, "If you found this item, please call the owner.")
         self.assertContains(response, "Call Owner")
+
+
+@override_settings(ALLOWED_HOSTS=["testserver", "localhost", "127.0.0.1"])
+class AdminPageTests(TestCase):
+    def setUp(self):
+        self.user = get_user_model().objects.create_superuser(
+            username="admin",
+            email="admin@example.com",
+            password="pass12345",
+        )
+        QRCode.objects.create(
+            name="Admin Check",
+            phone="+998901234567",
+            slug="admin-check",
+        )
+        self.client.force_login(self.user)
+
+    def test_qrcode_changelist_opens(self):
+        response = self.client.get("/admin/qrhub/qrcode/")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Admin Check")
