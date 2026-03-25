@@ -3,6 +3,7 @@ from pathlib import Path
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+LOCALE_PATHS = [BASE_DIR / "locale"]
 
 
 def env_bool(name, default=False):
@@ -25,7 +26,9 @@ if not ALLOWED_HOSTS:
         '127.0.0.1'
 ]
 
-APP_BASE_URL = os.environ.get("APP_BASE_URL", "https://your-domain.com").rstrip("/")
+default_app_base_url = "https://scanback.onrender.com"
+APP_BASE_URL = os.environ.get("APP_BASE_URL", default_app_base_url).rstrip("/")
+SCANBACK_BASE_URL = APP_BASE_URL
 
 
 INSTALLED_APPS = [
@@ -46,6 +49,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "qrhub.middleware.LanguageMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -66,6 +70,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "qrhub.context_processors.language_context",
             ],
         },
     },
@@ -95,7 +100,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "uz"
+LANGUAGES = [
+    ("uz", "O'zbekcha"),
+    ("ru", "Русский"),
+    ("en", "English"),
+]
 TIME_ZONE = "Asia/Tashkent"
 
 USE_I18N = True

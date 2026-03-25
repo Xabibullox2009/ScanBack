@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import admin
 from django.utils.html import format_html
 
@@ -11,6 +12,11 @@ class QRCodeAdmin(admin.ModelAdmin):
     search_fields = ("name", "phone", "slug")
     readonly_fields = ("slug", "created_at", "qr_preview", "download_qr", "public_url")
     fields = ("name", "phone", "slug", "public_url", "qr_image", "qr_preview", "download_qr", "created_at")
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        base_url = settings.APP_BASE_URL.rstrip("/")
+        obj.generate_qr_image(save=True, base_url=base_url)
 
     @admin.display(description="Public URL")
     def public_url(self, obj):

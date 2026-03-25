@@ -1,6 +1,6 @@
-{% load static %}
+{% load static i18n_extras %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ current_language }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,6 +11,24 @@
     <link rel="stylesheet" href="{% static 'qrhub/styles.css' %}">
 </head>
 <body>
+    <div class="language-bar">
+        <details class="language-switcher">
+            <summary class="language-toggle" aria-label="{% tr 'language_label' %}">
+                <span class="language-globe" aria-hidden="true">&#127760;</span>
+                <span class="language-current">{{ current_language|upper }}</span>
+            </summary>
+            <div class="language-menu">
+                {% for code, label in language_options %}
+                    <a class="language-option{% if current_language == code %} is-active{% endif %}" href="{% url 'qrhub:switch_language' %}?lang={{ code }}&next={{ request.get_full_path|urlencode }}">
+                        <span>{{ label }}</span>
+                        {% if current_language == code %}
+                            <span class="language-check">&#10003;</span>
+                        {% endif %}
+                    </a>
+                {% endfor %}
+            </div>
+        </details>
+    </div>
     {% block content %}{% endblock %}
 </body>
 </html>

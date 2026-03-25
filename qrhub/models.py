@@ -54,20 +54,21 @@ class QRCode(models.Model):
         original = type(self).objects.filter(pk=self.pk).values_list("slug", flat=True).first()
         return bool(original and original != self.slug)
 
-    def get_public_url(self):
-        return f"{settings.APP_BASE_URL}{reverse('qrhub:public_qr', kwargs={'slug': self.slug})}"
+    def get_public_url(self, base_url=None):
+        resolved_base_url = (base_url or settings.APP_BASE_URL).rstrip("/")
+        return f"{resolved_base_url}{reverse('qrhub:public_qr', kwargs={'slug': self.slug})}"
 
     def get_phone_link(self):
         return f"tel:{self.phone}"
 
-    def generate_qr_image(self, save=True):
+    def generate_qr_image(self, save=True, base_url=None):
         qr = qrcode.QRCode(
             version=1,
             error_correction=qrcode.constants.ERROR_CORRECT_M,
             box_size=10,
             border=4,
         )
-        qr.add_data(self.get_public_url())
+        qr.add_data(self.get_public_url(base_url=base_url))
         qr.make(fit=True)
 
         image = qr.make_image(fill_color="black", back_color="white")

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static i18n_extras %}
 
 {% block title %}ScanBack | Smart Lost and Found{% endblock %}
 
@@ -11,24 +11,20 @@
                 <img class="brand-logo" src="{% static 'qrhub/logo.png' %}" alt="ScanBack logo">
                 <span class="brand-text">
                     <strong>ScanBack</strong>
-                    <small>QR Lost and Found</small>
+                    <small>{% tr "brand_tagline" %}</small>
                 </span>
             </a>
         </header>
 
         <div class="hero-grid">
             <div class="hero-copy">
-                <p class="eyebrow">Lost items, found faster</p>
-                <h1>Your item gets a QR code. The finder gets one-tap calling.</h1>
-                <p class="hero-text">
-                    ScanBack helps businesses and clients protect bags, keys, documents, devices,
-                    and personal belongings with admin-generated QR codes. When someone scans the code,
-                    they instantly see the owner's name and a call button that opens the phone dialer.
-                </p>
+                <p class="eyebrow">{% tr "hero_eyebrow" %}</p>
+                <h1>{% tr "hero_title" %}</h1>
+                <p class="hero-text">{% tr "hero_text" %}</p>
                 <ul class="trust-list">
-                    <li>Admin creates QR codes for clients</li>
-                    <li>Each QR opens a unique secure slug page</li>
-                    <li>Mobile users can call the owner in one tap</li>
+                    <li>{% tr "trust_1" %}</li>
+                    <li>{% tr "trust_2" %}</li>
+                    <li>{% tr "trust_3" %}</li>
                 </ul>
             </div>
 
@@ -36,12 +32,12 @@
                 <div class="phone-mockup">
                     <div class="phone-top"></div>
                     <div class="phone-screen">
-                        <p class="screen-label">Scanned QR page</p>
+                        <p class="screen-label">{% tr "scanned_page" %}</p>
                         <h2>Akmal Karimov</h2>
-                        <p>If you found this item, please call the owner.</p>
+                        <p>{% tr "found_item_call" %}</p>
                         <a class="call-button demo-button" href="tel:+998901234567">
                             <span class="call-emoji">&#128222;</span>
-                            Call Owner
+                            {% tr "call_owner" %}
                         </a>
                         <span class="phone-label">+998901234567</span>
                     </div>
@@ -52,60 +48,60 @@
 
     <section class="info-strip">
         <div class="info-card">
-            <strong>For businesses</strong>
-            <p>Protect client belongings with a simple QR-based callback system.</p>
+            <strong>{% tr "businesses_title" %}</strong>
+            <p>{% tr "businesses_text" %}</p>
         </div>
         <div class="info-card">
-            <strong>For clients</strong>
-            <p>No login needed. Their contact page opens directly from the QR code.</p>
+            <strong>{% tr "clients_title" %}</strong>
+            <p>{% tr "clients_text" %}</p>
         </div>
         <div class="info-card">
-            <strong>For finders</strong>
-            <p>Scan, view the owner, tap the button, and call from the mobile dialer.</p>
+            <strong>{% tr "finders_title" %}</strong>
+            <p>{% tr "finders_text" %}</p>
         </div>
     </section>
 
     <section class="section-block" id="how-it-works">
         <div class="section-heading">
-            <p class="eyebrow">How it works</p>
-            <h2>Simple flow from admin dashboard to mobile call</h2>
+            <p class="eyebrow">{% tr "how_it_works" %}</p>
+            <h2>{% tr "how_it_works_title" %}</h2>
         </div>
         <div class="steps-grid">
             <article class="step-card">
                 <span class="step-number">01</span>
-                <h3>Client gets a QR identity</h3>
-                <p>Each protected item is connected to its owner's saved contact details.</p>
+                <h3>{% tr "step_1_title" %}</h3>
+                <p>{% tr "step_1_text" %}</p>
             </article>
             <article class="step-card">
                 <span class="step-number">02</span>
-                <h3>System generates the QR</h3>
-                <p>ScanBack creates a unique slug and saves the QR image automatically.</p>
+                <h3>{% tr "step_2_title" %}</h3>
+                <p>{% tr "step_2_text" %}</p>
             </article>
             <article class="step-card">
                 <span class="step-number">03</span>
-                <h3>Finder scans the code</h3>
-                <p>The QR opens a clean page showing the owner's name and call action.</p>
+                <h3>{% tr "step_3_title" %}</h3>
+                <p>{% tr "step_3_text" %}</p>
             </article>
             <article class="step-card">
                 <span class="step-number">04</span>
-                <h3>Phone app opens</h3>
-                <p>The call button uses `tel:` so mobile devices open the dialer directly.</p>
+                <h3>{% tr "step_4_title" %}</h3>
+                <p>{% tr "step_4_text" %}</p>
             </article>
         </div>
     </section>
 
     <section class="section-block compact-section">
         <div class="section-heading">
-            <p class="eyebrow">Best use cases</p>
-            <h2>Made for real items people lose every day</h2>
+            <p class="eyebrow">{% tr "best_use_cases" %}</p>
+            <h2>{% tr "best_use_cases_title" %}</h2>
         </div>
         <div class="use-case-grid">
-            <div class="use-case-card">Backpacks and luggage</div>
-            <div class="use-case-card">Keys and wallets</div>
-            <div class="use-case-card">Company devices</div>
-            <div class="use-case-card">ID holders and cards</div>
-            <div class="use-case-card">School and office items</div>
-            <div class="use-case-card">Delivery and travel gear</div>
+            <div class="use-case-card">{% tr "use_case_1" %}</div>
+            <div class="use-case-card">{% tr "use_case_2" %}</div>
+            <div class="use-case-card">{% tr "use_case_3" %}</div>
+            <div class="use-case-card">{% tr "use_case_4" %}</div>
+            <div class="use-case-card">{% tr "use_case_5" %}</div>
+            <div class="use-case-card">{% tr "use_case_6" %}</div>
         </div>
     </section>
 </main>
