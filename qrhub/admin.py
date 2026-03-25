@@ -7,7 +7,7 @@ from .models import QRCode
 
 @admin.register(QRCode)
 class QRCodeAdmin(admin.ModelAdmin):
-    list_display = ("name", "phone", "slug", "qr_preview", "download_qr", "created_at")
+    list_display = ("name", "phone", "slug", "public_url", "created_at")
     list_filter = ("created_at",)
     search_fields = ("name", "phone", "slug")
     readonly_fields = ("slug", "created_at", "qr_preview", "download_qr", "public_url")
