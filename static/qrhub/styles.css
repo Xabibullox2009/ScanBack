@@ -133,6 +133,27 @@ a {
     text-decoration: none;
 }
 
+.admin-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    padding: 0 18px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.88);
+    border: 1px solid rgba(16, 42, 67, 0.12);
+    box-shadow: 0 14px 28px rgba(12, 39, 58, 0.12);
+    color: var(--ink);
+    font-weight: 800;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 34px rgba(12, 39, 58, 0.16);
+}
+
 .brand-logo {
     width: 64px;
     height: 64px;
@@ -442,14 +463,6 @@ a {
     line-height: 1;
 }
 
-.phone-label {
-    display: block;
-    margin-top: 18px;
-    font-size: 1rem;
-    font-weight: 800;
-    color: var(--ink);
-}
-
 .public-note {
     margin: 14px 0 0;
     font-size: 0.95rem;
@@ -509,6 +522,10 @@ a {
 
     .brand {
         justify-content: center;
+    }
+
+    .admin-link {
+        width: 100%;
     }
 
     .phone-mockup {

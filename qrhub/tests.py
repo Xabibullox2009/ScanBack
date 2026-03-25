@@ -44,15 +44,22 @@ class QRHubPublicFlowTests(TestCase):
         content = response.content.decode("utf-8")
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, self.qr_code.name)
+        self.assertContains(response, "Dilshod K.")
+        self.assertNotContains(response, self.qr_code.name)
         self.assertContains(response, 'href="tel:+998901234567"', html=False)
         self.assertIn("Egasiga qo&#x27;ng&#x27;iroq qilish", content)
+        self.assertNotIn(">+998901234567<", content)
 
     def test_short_slug_route_opens_public_page(self):
         response = self.client.get(f"/{self.qr_code.slug}/")
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, self.qr_code.name)
+        self.assertContains(response, "Dilshod K.")
+
+    def test_home_page_contains_admin_link(self):
+        response = self.client.get(reverse("qrhub:home"))
+
+        self.assertContains(response, 'href="/admin/"', html=False)
 
     def test_public_url_accepts_runtime_base_url(self):
         url = self.qr_code.get_public_url(base_url="http://127.0.0.1:8000")

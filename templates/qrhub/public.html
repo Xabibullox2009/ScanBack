@@ -1,19 +1,18 @@
 {% extends "base.html" %}
 {% load i18n_extras %}
 
-{% block title %}{{ qr_code.name }} | ScanBack{% endblock %}
+{% block title %}{{ qr_code.get_public_display_name }} | ScanBack{% endblock %}
 
 {% block content %}
 <main class="public-shell">
     <section class="public-card">
         <p class="eyebrow">{% tr "contact_page_label" %}</p>
-        <h1>{{ qr_code.name }}</h1>
+        <h1>{{ qr_code.get_public_display_name }}</h1>
         <p class="lead">{% tr "found_item_call" %}</p>
         <a class="call-button" href="{{ qr_code.get_phone_link }}">
             <span class="call-emoji">&#128222;</span>
             {% tr "call_owner" %}
         </a>
-        <p class="phone-label">{{ qr_code.phone }}</p>
         <p class="public-note">{% tr "mobile_note" %}</p>
     </section>
 </main>

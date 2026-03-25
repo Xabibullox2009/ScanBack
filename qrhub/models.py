@@ -61,6 +61,15 @@ class QRCode(models.Model):
     def get_phone_link(self):
         return f"tel:{self.phone}"
 
+    def get_public_display_name(self):
+        parts = [part for part in self.name.split() if part]
+        if not parts:
+            return ""
+        if len(parts) == 1:
+            return parts[0]
+        initials = " ".join(f"{part[0].upper()}." for part in parts[1:] if part)
+        return f"{parts[0]} {initials}".strip()
+
     def generate_qr_image(self, save=True, base_url=None):
         qr = qrcode.QRCode(
             version=1,
