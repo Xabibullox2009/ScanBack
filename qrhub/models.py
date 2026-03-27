@@ -72,9 +72,9 @@ class QRCode(models.Model):
 
     def generate_qr_image(self, save=True, base_url=None):
         qr = qrcode.QRCode(
-            version=1,
-            error_correction=qrcode.constants.ERROR_CORRECT_M,
-            box_size=10,
+            version=None,
+            error_correction=qrcode.constants.ERROR_CORRECT_H,
+            box_size=15, 
             border=4,
         )
         qr.add_data(self.get_public_url(base_url=base_url))
@@ -82,7 +82,8 @@ class QRCode(models.Model):
 
         image = qr.make_image(fill_color="black", back_color="white")
         buffer = BytesIO()
-        image.save(buffer, format="PNG")
+        image.save(buffer, format="PNG", dpi=(300, 300))
+        buffer.seek(0)
         filename = f"{self.slug}.png"
 
         self.qr_image.save(filename, ContentFile(buffer.getvalue()), save=False)

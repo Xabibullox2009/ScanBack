@@ -88,13 +88,29 @@ class QRHubPublicFlowTests(TestCase):
 
 @override_settings(ALLOWED_HOSTS=["testserver", "localhost", "127.0.0.1"])
 class AdminPageTests(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._temp_media = Path(settings.BASE_DIR) / ".test_media_admin"
+        cls._temp_media.mkdir(parents=True, exist_ok=True)
+        cls._override = override_settings(MEDIA_ROOT=cls._temp_media)
+        cls._override.enable()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls._override.disable()
+        shutil.rmtree(cls._temp_media, ignore_errors=True)
+        super().tearDownClass()
+
     def setUp(self):
+        qr_dir = Path(settings.MEDIA_ROOT) / "qr_codes"
+        shutil.rmtree(qr_dir, ignore_errors=True)
         self.user = get_user_model().objects.create_superuser(
             username="admin",
             email="admin@example.com",
             password="pass12345",
         )
-        QRCode.objects.create(
+        self.qr_code = QRCode.objects.create(
             name="Admin Check",
             phone="+998901234567",
             slug="admin-check",
@@ -106,3 +122,37 @@ class AdminPageTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Admin Check")
+
+    def test_admin_change_page_uses_proxy_preview_and_download_links(self):
+        response = self.client.get(f"/admin/qrhub/qrcode/{self.qr_code.pk}/change/")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(
+            response,
+            f'/admin/qrhub/qrcode/{self.qr_code.pk}/qr-preview/',
+            html=False,
+        )
+        self.assertContains(
+            response,
+            f'/admin/qrhub/qrcode/{self.qr_code.pk}/qr-download/',
+            html=False,
+        )
+
+    def test_admin_qr_preview_streams_image(self):
+        response = self.client.get(reverse("admin:qrhub_qrcode_qr_preview", args=[self.qr_code.pk]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Content-Type"], "image/png")
+        self.assertIn('inline; filename="admin-check.png"', response["Content-Disposition"])
+
+    def test_admin_qr_download_streams_attachment(self):
+        response = self.client.get(reverse("admin:qrhub_qrcode_qr_download", args=[self.qr_code.pk]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Content-Type"], "image/png")
+        self.assertIn('attachment; filename="admin-check.png"', response["Content-Disposition"])
+
+    def test_qrcode_create_generates_single_file(self):
+        files = list((Path(settings.MEDIA_ROOT) / "qr_codes").glob("admin-check*.png"))
+
+        self.assertEqual(len(files), 1)
